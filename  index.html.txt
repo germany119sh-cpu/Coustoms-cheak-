@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جستجوی اموال گمرکی</title>
+    <style>
+        :root {
+            --bg-color: #0f0c29;
+            --card-bg: #1a1a2e;
+            --accent-color: #6a5af9;
+            --text-color: #ffffff;
+            --input-bg: #252545;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 450px;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        h2 { margin-bottom: 20px; font-size: 24px; }
+        p { color: #ccc; font-size: 14px; }
+
+        .search-box {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        input {
+            background: var(--input-bg);
+            border: 1px solid #3f3f6e;
+            padding: 12px;
+            border-radius: 10px;
+            color: white;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        button {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover { background: #5648d8; transform: scale(1.02); }
+
+        #result {
+            margin-top: 25px;
+            padding: 15px;
+            background: #16213e;
+            border-radius: 12px;
+            display: none;
+            text-align: right;
+            border-right: 5px solid var(--accent-color);
+        }
+
+        .item-row { margin-bottom: 8px; display: flex; justify-content: space-between; border-bottom: 1px solid #2e2e50; padding-bottom: 5px;}
+        .label { color: #aaa; font-size: 13px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>📦 جستجوی اموال</h2>
+    <p>برای شروع، اطلاعات را در فیلدهای زیر وارد کنید</p>
+
+    <div class="search-box">
+        <input type="text" id="nameInput" placeholder="نام محصول (مثلاً: روغن)">
+        
+        <div class="row">
+            <input type="text" id="tscInput" placeholder="TSC کد">
+            <input type="text" id="hsInput" placeholder="HS کد">
+        </div>
+        
+        <input type="text" id="countryInput" placeholder="کشور">
+
+        <button onclick="searchAction()">جستجو 🔍</button>
+    </div>
+
+    <div id="result">
+        <!-- نتایج اینجا نمایش داده می‌شوند -->
+    </div>
+</div>
+
+<script>
+    // دیتابیس فرضی (می‌توانید کدهای واقعی را اینجا اضافه کنید)
+    const database = [
+        { name: "روغن", tsc: "1234", hs: "1512", country: "مالزی", tax: "5%", note: "کالای اساسی" },
+        { name: "تایر", tsc: "5678", hs: "4011", country: "چین", tax: "20%", note: "مجوز وزارت صنایع" },
+        { name: "لپ تاپ", tsc: "9900", hs: "8471", country: "دبی", tax: "10%", note: "تجهیزات الکترونیک" }
+    ];
+
+    function searchAction() {
+        const name = document.getElementById('nameInput').value;
+        const resultDiv = document.getElementById('result');
+        
+        // پیدا کردن جنس بر اساس نام (جستجوی ساده)
+        const found = database.find(item => item.name.includes(name) && name !== "");
+
+        if (found) {
+            resultDiv.style.display = "block";
+            resultDiv.innerHTML = `
+                <div class="item-row"><span class="label">نام:</span> <span>${found.name}</span></div>
+                <div class="item-row"><span class="label">HS کد:</span> <span>${found.hs}</span></div>
+                <div class="item-row"><span class="label">TSC کد:</span> <span>${found.tsc}</span></div>
+                <div class="item-row"><span class="label">کشور:</span> <span>${found.country}</span></div>
+                <div class="item-row"><span class="label">تعرفه گمرکی:</span> <span style="color:#00ff88">${found.tax}</span></div>
+                <div class="item-row"><span class="label">ملاحظات:</span> <span>${found.note}</span></div>
+            `;
+        } else {
+            resultDiv.style.display = "block";
+            resultDiv.innerHTML = "❌ محصولی با این مشخصات یافت نشد.";
+        }
+    }
+</script>
+
+</body>
+</html>
